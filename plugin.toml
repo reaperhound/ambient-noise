@@ -5,7 +5,7 @@ author = "Reaper Hound"
 description = "Ambient sound mixer for Noctalia"
 license = "MIT"
 icon = "headphones"
-plugin_api = 20
+plugin_api = 24
 
 
 [[panel]]
@@ -15,6 +15,10 @@ width = 1100
 height = 720
 placement = "floating"
 position = "center"
+
+[[widget]]
+id = "ambient-sounds"
+entry = "widget.luau"
 
 [[shortcut]]
 id = "toggle"
