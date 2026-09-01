@@ -30,6 +30,15 @@ local function soundCard(sound)
             ui.slider({ min = -100, max = 100, step = 1, value = sound.pan, controlSize = "sm", flexGrow = 1 }),
             ui.label({ text = panText, fontSize = 11, color = "primary", width = 35, textAlign = "end" }),
         }),
+        ui.button({
+            text = sound.amplified and "⚡  Amplified" or "⚡  Amplify",
+            variant = sound.amplified and "primary" or "outline",
+            controlSize = "sm",
+            onClick = function()
+                engine:setAmplified(sound.id, not sound.amplified)
+                render()
+            end,
+        }),
     })
 end
 

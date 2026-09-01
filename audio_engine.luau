@@ -5,9 +5,11 @@ AudioEngine.__index = AudioEngine
 -- The bundled recordings are quieter than typical desktop audio. Keep the UI
 -- at a familiar 0–100 range while giving each source a small 35% gain boost.
 local SOURCE_GAIN = 1.35
+local AMPLIFY_GAIN = 1.5
 
-local function playerVolume(level)
-    return math.floor(level * SOURCE_GAIN)
+local function playerVolume(sound)
+    local amplify = sound.amplified and AMPLIFY_GAIN or 1
+    return math.floor(sound.level * SOURCE_GAIN * amplify)
 end
 
 local function systemVolume(callback)
@@ -88,7 +90,7 @@ function AudioEngine:startSound(sound)
             sound.starting = false
             noctalia.runAsync({
                 "/usr/bin/mpv", "--no-video", "--no-terminal", "--loop-file=inf",
-                "--input-ipc-server=" .. socket, "--volume=" .. tostring(playerVolume(sound.level)),
+                "--input-ipc-server=" .. socket, "--volume=" .. tostring(playerVolume(sound)),
                 noctalia.expandPath(sound.file),
             })
         end)
@@ -124,13 +126,9 @@ function AudioEngine:toggleSound(id, enabled)
             sound.enabled = enabled == nil and not sound.enabled or enabled
             if self.running then
                 if sound.enabled then
-                    if sound.playerStarted then
-                        self:sendCommand(sound, { "set_property", "pause", false })
-                    else
-                        self:startSound(sound)
-                    end
+                    self:startSound(sound)
                 else
-                    self:sendCommand(sound, { "set_property", "pause", true })
+                    self:stopSound(sound)
                 end
             end
             return
@@ -143,7 +141,19 @@ function AudioEngine:setSoundVolume(id, value)
         if sound.id == id then
             sound.level = value
             if self.running then
-                self:sendCommand(sound, { "set_property", "volume", playerVolume(value) })
+                self:sendCommand(sound, { "set_property", "volume", playerVolume(sound) })
+            end
+            return
+        end
+    end
+end
+
+function AudioEngine:setAmplified(id, enabled)
+    for _, sound in ipairs(self.sounds) do
+        if sound.id == id then
+            sound.amplified = enabled
+            if self.running and sound.playerStarted then
+                self:sendCommand(sound, { "set_property", "volume", playerVolume(sound) })
             end
             return
         end
