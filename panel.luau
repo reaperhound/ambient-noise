@@ -4,7 +4,6 @@ local AudioEngine = require("./audio_engine.luau")
 local engine = AudioEngine.new(sounds)
 
 local function soundCard(sound)
-    local panText = sound.pan == 0 and "CTR" or (sound.pan < 0 and "L" .. math.abs(sound.pan) or "R" .. sound.pan)
     return ui.column({ gap = 12, padding = 16, flexGrow = 1, minWidth = 300,
         fill = sound.enabled and "surface_variant/0.38" or "surface_variant/0.20", radius = 16,
         border = sound.enabled and "primary/0.45" or "outline/0.35", borderWidth = 1 }, {
@@ -16,19 +15,20 @@ local function soundCard(sound)
                 ui.label({ text = sound.title, fontSize = 15, fontWeight = "bold" }),
                 ui.label({ text = sound.description, fontSize = 11, color = "on_surface_variant", maxLines = 2 }),
             }),
-            ui.toggle({ checked = sound.enabled, onChanged = function(value) engine:toggleSound(sound.id, value); render() end }),
+            ui.toggle({
+                checked = sound.enabled,
+                onChange = function(value)
+                    engine:toggleSound(sound.id, value == "true")
+                    render()
+                end,
+            }),
         }),
         ui.separator({ thickness = 1, color = "outline/0.25" }),
         ui.row({ gap = 10, align = "center" }, {
-            ui.label({ text = "LEVEL", fontSize = 10, color = "on_surface_variant", width = 42 }),
+            ui.label({ text = "VOLUME", fontSize = 10, color = "on_surface_variant", width = 52 }),
             ui.slider({ min = 0, max = 100, step = 1, value = sound.level, controlSize = "sm", flexGrow = 1,
-                onChanged = function(value) engine:setSoundVolume(sound.id, value); render() end }),
+                onChange = function(value) engine:setSoundVolume(sound.id, tonumber(value) or 0); render() end }),
             ui.label({ text = sound.level .. "%", fontSize = 11, color = "primary", width = 35, textAlign = "end" }),
-        }),
-        ui.row({ gap = 10, align = "center" }, {
-            ui.label({ text = "PAN", fontSize = 10, color = "on_surface_variant", width = 42 }),
-            ui.slider({ min = -100, max = 100, step = 1, value = sound.pan, controlSize = "sm", flexGrow = 1 }),
-            ui.label({ text = panText, fontSize = 11, color = "primary", width = 35, textAlign = "end" }),
         }),
         ui.button({
             text = sound.amplified and "⚡  Amplified" or "⚡  Amplify",
@@ -60,11 +60,7 @@ function render()
                 onClick = function() if engine.running then engine:stopAll() else engine:start() end; render() end }),
         }),
         ui.row({ gap = 12, flexGrow = 1, align = "stretch" }, cards),
-        ui.row({ gap = 16, padding = 14, align = "center", fill = "surface_variant/0.30", radius = 16, border = "outline/0.3", borderWidth = 1 }, {
-            ui.label({ text = "🔊  SYSTEM VOLUME", fontSize = 11, fontWeight = "bold", color = "on_surface_variant" }),
-            ui.slider({ min = 0, max = 100, step = 1, value = engine.masterVolume, controlSize = "sm", flexGrow = 1,
-                onChanged = function(value) engine:setMasterVolume(value); render() end }),
-            ui.label({ text = engine.masterVolume .. "%", fontSize = 12, color = "primary", width = 38, textAlign = "end" }),
+        ui.row({ gap = 16, padding = 14, align = "center", justify = "end", fill = "surface_variant/0.30", radius = 16, border = "outline/0.3", borderWidth = 1 }, {
             ui.button({ text = "Ⅱ  Pause All", variant = "outline", controlSize = "sm", onClick = function() engine:pauseAll() end }),
             ui.button({ text = "■  Stop All", variant = "outline", controlSize = "sm", onClick = function() engine:stopAll(); render() end }),
         }),
@@ -72,13 +68,7 @@ function render()
 end
 
 function onOpen(_context)
-    noctalia.setUpdateInterval(1500)
     render()
-    engine:refreshSystemVolume(render)
-end
-
-function update()
-    engine:refreshSystemVolume(render)
 end
 
 function onExit(_signal, _reason)

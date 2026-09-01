@@ -75,10 +75,13 @@ function AudioEngine:startSound(sound)
     end
 
     sound.starting = true
+    sound.generation = (sound.generation or 0) + 1
+    local myGeneration = sound.generation
     local socket = self:socketPath(sound)
 
-    -- mpv cannot create this directory itself, so create it before binding IPC.
     noctalia.runAsync({ "mkdir", "-p", self.socketDir }, function(result)
+        if sound.generation ~= myGeneration then return end -- stopped/restarted meanwhile
+
         if not result or result.exitCode ~= 0 then
             sound.starting = false
             noctalia.notifyError("Ambient Sounds", "Could not create the audio control socket directory.")
@@ -86,6 +89,8 @@ function AudioEngine:startSound(sound)
         end
 
         noctalia.runAsync({ "rm", "-f", socket }, function()
+            if sound.generation ~= myGeneration then return end
+
             sound.playerStarted = true
             sound.starting = false
             noctalia.runAsync({
@@ -98,6 +103,7 @@ function AudioEngine:startSound(sound)
 end
 
 function AudioEngine:stopSound(sound)
+    sound.generation = (sound.generation or 0) + 1  -- invalidates any in-flight startSound
     self:sendCommand(sound, { "quit" })
     noctalia.runAsync({ "/usr/bin/pkill", "-f", "input-ipc-server=" .. self:socketPath(sound) })
     sound.playerStarted = false
