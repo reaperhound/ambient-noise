@@ -171,13 +171,6 @@ function AudioEngine:setMasterVolume(value)
     noctalia.runAsync({ "wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", tostring(value) .. "%" })
 end
 
-function AudioEngine:pauseAll()
-    if self.running then
-        for _, sound in ipairs(self.sounds) do
-            self:sendCommand(sound, { "set_property", "pause", true })
-        end
-    end
-end
 
 function AudioEngine:refreshSystemVolume(onChanged)
     if self.volumeRequestInFlight then

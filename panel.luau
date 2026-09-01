@@ -61,7 +61,6 @@ function render()
         }),
         ui.row({ gap = 12, flexGrow = 1, align = "stretch" }, cards),
         ui.row({ gap = 16, padding = 14, align = "center", justify = "end", fill = "surface_variant/0.30", radius = 16, border = "outline/0.3", borderWidth = 1 }, {
-            ui.button({ text = "Ⅱ  Pause All", variant = "outline", controlSize = "sm", onClick = function() engine:pauseAll() end }),
             ui.button({ text = "■  Stop All", variant = "outline", controlSize = "sm", onClick = function() engine:stopAll(); render() end }),
         }),
     }))
