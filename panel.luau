@@ -4,12 +4,12 @@ local AudioEngine = require("./audio_engine.luau")
 local engine = AudioEngine.new(sounds)
 
 local function soundCard(sound)
-    return ui.column({ gap = 12, padding = 16, flexGrow = 1, minWidth = 300,
+    return ui.column({ gap = 12, padding = 16, flexGrow = 1, minWidth = 240,
         fill = sound.enabled and "surface_variant/0.38" or "surface_variant/0.20", radius = 16,
         border = sound.enabled and "primary/0.45" or "outline/0.35", borderWidth = 1 }, {
         ui.row({ gap = 12, align = "center" }, {
-            ui.box({ width = 46, height = 46, fill = "surface/0.7", radius = 12, border = "outline/0.25", borderWidth = 1, align = "center" }, {
-                ui.label({ text = sound.icon, fontSize = 22 }),
+            ui.row({ width = 46, height = 46, fill = "surface/0.7", radius = 12, border = "outline/0.25", borderWidth = 1, align = "center", justify = "center" }, {
+                ui.glyph({ name = sound.icon, size = 22, color = "primary" }),
             }),
             ui.column({ gap = 3, flexGrow = 1 }, {
                 ui.label({ text = sound.title, fontSize = 15, fontWeight = "bold" }),
@@ -31,7 +31,9 @@ local function soundCard(sound)
             ui.label({ text = sound.level .. "%", fontSize = 11, color = "primary", width = 35, textAlign = "end" }),
         }),
         ui.button({
-            text = sound.amplified and "⚡  Amplified" or "⚡  Amplify",
+            glyph = "bolt",
+            glyphSize = 14,
+            text = sound.amplified and "Amplified" or "Amplify",
             variant = sound.amplified and "primary" or "outline",
             controlSize = "sm",
             onClick = function()
@@ -43,25 +45,38 @@ local function soundCard(sound)
 end
 
 function render()
-    local cards = {}
-    for _, sound in ipairs(sounds) do table.insert(cards, soundCard(sound)) end
+    local cardRows = {}
+    for index, sound in ipairs(sounds) do
+        local row = cardRows[math.ceil(index / 4)]
+        if not row then
+            row = {}
+            table.insert(cardRows, row)
+        end
+        table.insert(row, soundCard(sound))
+    end
+
+    local grid = {}
+    for _, row in ipairs(cardRows) do
+        while #row < 4 do table.insert(row, ui.spacer({ flexGrow = 1, minWidth = 240 })) end
+        table.insert(grid, ui.row({ gap = 12, align = "stretch" }, row))
+    end
 
     panel.render(ui.column({ gap = 18, padding = 22 }, {
         ui.row({ gap = 18, padding = 20, align = "center", fill = "surface_variant/0.30", radius = 18,
             border = engine.running and "primary/0.65" or "primary/0.35", borderWidth = 1 }, {
-            ui.box({ width = 58, height = 58, fill = "surface/0.75", radius = 16, border = "primary/0.7", borderWidth = 1, align = "center" }, {
-                ui.label({ text = "♫", fontSize = 30, color = "primary" }),
+            ui.row({ width = 58, height = 58, fill = "surface/0.75", radius = 16, border = "primary/0.7", borderWidth = 1, align = "center", justify = "center" }, {
+                ui.glyph({ name = "music", size = 30, color = "primary" }),
             }),
             ui.column({ gap = 4, flexGrow = 1 }, {
                 ui.label({ text = "Ambient Sounds", fontSize = 25, fontWeight = "bold" }),
                 ui.label({ text = engine.running and "Engine running" or "High-Fidelity Ambient Sound Mixer", fontSize = 12, color = "on_surface_variant" }),
             }),
-            ui.button({ text = engine.running and "■  STOP ENGINE" or "▶  START ENGINE", variant = engine.running and "outline" or "primary", controlSize = "md",
+            ui.button({ glyph = engine.running and "player-stop" or "player-play", glyphSize = 16, text = engine.running and "STOP ENGINE" or "START ENGINE", variant = engine.running and "outline" or "primary", controlSize = "md",
                 onClick = function() if engine.running then engine:stopAll() else engine:start() end; render() end }),
         }),
-        ui.row({ gap = 12, flexGrow = 1, align = "stretch" }, cards),
+        ui.scroll({ gap = 12, flexGrow = 1, align = "stretch" }, grid),
         ui.row({ gap = 16, padding = 14, align = "center", justify = "end", fill = "surface_variant/0.30", radius = 16, border = "outline/0.3", borderWidth = 1 }, {
-            ui.button({ text = "■  Stop All", variant = "outline", controlSize = "sm", onClick = function() engine:stopAll(); render() end }),
+            ui.button({ glyph = "player-stop", glyphSize = 14, text = "Stop All", variant = "outline", controlSize = "sm", onClick = function() engine:stopAll(); render() end }),
         }),
     }))
 end
