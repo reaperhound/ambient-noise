@@ -61,7 +61,7 @@ function render()
         table.insert(grid, ui.row({ gap = 12, align = "stretch" }, row))
     end
 
-    panel.render(ui.column({ gap = 18, padding = 22 }, {
+    panel.render(ui.column({ gap = 18, padding = 22, height = 676 }, {
         ui.row({ gap = 18, padding = 20, align = "center", fill = "surface_variant/0.30", radius = 18,
             border = engine.running and "primary/0.65" or "primary/0.35", borderWidth = 1 }, {
             ui.row({ width = 58, height = 58, fill = "surface/0.75", radius = 16, border = "primary/0.7", borderWidth = 1, align = "center", justify = "center" }, {
@@ -75,9 +75,6 @@ function render()
                 onClick = function() if engine.running then engine:stopAll() else engine:start() end; render() end }),
         }),
         ui.scroll({ gap = 12, flexGrow = 1, align = "stretch" }, grid),
-        ui.row({ gap = 16, padding = 14, align = "center", justify = "end", fill = "surface_variant/0.30", radius = 16, border = "outline/0.3", borderWidth = 1 }, {
-            ui.button({ glyph = "player-stop", glyphSize = 14, text = "Stop All", variant = "outline", controlSize = "sm", onClick = function() engine:stopAll(); render() end }),
-        }),
     }))
 end
 
