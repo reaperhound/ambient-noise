@@ -13,7 +13,7 @@ return {
     },
     {
         id = "fan",
-        icon = "wind",
+        icon = "propeller",
         title = "Ceiling Fan",
         description = "Continuous low-frequency fan noise",
         file = "/home/reaper/.local/share/noctalia/plugins/ambient-sounds/sounds/ceiling_fan.wav",
@@ -24,7 +24,7 @@ return {
     },
     {
         id = "rain",
-        icon = "rain",
+        icon = "droplet",
         title = "Rain",
         description = "Light rain noise",
         file = "/home/reaper/.local/share/noctalia/plugins/ambient-sounds/sounds/light_rain.wav",
@@ -35,7 +35,7 @@ return {
     },
     {
         id = "rain_and_thunder",
-        icon = "thunder",
+        icon = "droplet-bolt",
         title = "Rain and Thunder",
         description = "Rain and Thunder",
         file = "/home/reaper/.local/share/noctalia/plugins/ambient-sounds/sounds/rain_and_thunder.wav",

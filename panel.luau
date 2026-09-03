@@ -8,7 +8,7 @@ local function soundCard(sound)
         fill = sound.enabled and "surface_variant/0.38" or "surface_variant/0.20", radius = 16,
         border = sound.enabled and "primary/0.45" or "outline/0.35", borderWidth = 1 }, {
         ui.row({ gap = 12, align = "center" }, {
-            ui.row({ width = 46, height = 46, fill = "surface/0.7", radius = 12, border = "outline/0.25", borderWidth = 1, align = "center", justify = "center" }, {
+            ui.row({ width = 46, height = 46, radius = 12, border = "outline/0.25", borderWidth = 1, align = "center", justify = "center" }, {
                 ui.glyph({ name = sound.icon, size = 22, color = "primary" }),
             }),
             ui.column({ gap = 3, flexGrow = 1 }, {
