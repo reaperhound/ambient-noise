@@ -15,7 +15,9 @@ return {
     },
     {
         id = "stream",
-        icon = "ripple",
+        icon = "icons/river.otf",
+        custom_icon = true,
+        fallback_icon = "ripple",
         title = "Stream",
         description = "Rain and Thunder",
         file = "/home/reaper/.local/share/noctalia/plugins/ambient-sounds/sounds/stream.ogg",
@@ -26,7 +28,9 @@ return {
     },
     {
         id = "birds",
-        icon = "feather",
+        icon = "icons/bird.otf",
+        custom_icon = true,
+        fallback_icon = "feather",
         title = "Birds",
         description = "Birds",
         file = "/home/reaper/.local/share/noctalia/plugins/ambient-sounds/sounds/birds.ogg",
@@ -37,7 +41,9 @@ return {
     },
     {
         id = "boat",
-        icon = "sailboat",
+        icon = "icons/boat.otf",
+        custom_icon = true,
+        fallback_icon = "sailboat",
         title = "Boat",
         description = "Boat cruising through a river",
         file = "/home/reaper/.local/share/noctalia/plugins/ambient-sounds/sounds/boat.ogg",
@@ -48,7 +54,9 @@ return {
     },
     {
         id = "thunder",
-        icon = "cloud-bolt",
+        icon = "icons/thunder-cloud.otf",
+        custom_icon = true,
+        fallback_icon = "cloud-bolt",
         title = "Thunder",
         description = "Dry thunder",
         file = "/home/reaper/.local/share/noctalia/plugins/ambient-sounds/sounds/dry-thunder.opus",

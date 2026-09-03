@@ -27,6 +27,7 @@ def convert(source, destination, codepoint=0xE000):
         filtered.close()
 
         units = 1000
+        family_name = f"Custom {os.path.splitext(os.path.basename(destination))[0].replace('-', ' ').title()} Icon"
         glyph_pen = TTGlyphPen(None)
         pen = TransformPen(
             Cu2QuPen(glyph_pen, 1 / 16),
@@ -41,11 +42,11 @@ def convert(source, destination, codepoint=0xE000):
         builder.setupHorizontalMetrics({".notdef": (units, 0), "icon": (units, 0)})
         builder.setupHorizontalHeader(ascent=800, descent=-200)
         builder.setupNameTable({
-            "familyName": "Custom SVG Icon",
+            "familyName": family_name,
             "styleName": "Regular",
-            "uniqueFontIdentifier": "Custom SVG Icon Regular",
-            "fullName": "Custom SVG Icon Regular",
-            "psName": "CustomSVGIcon-Regular",
+            "uniqueFontIdentifier": f"{family_name} Regular",
+            "fullName": f"{family_name} Regular",
+            "psName": f"{family_name.replace(' ', '')}-Regular",
         })
         builder.setupOS2(sTypoAscender=800, sTypoDescender=-200, usWinAscent=1000, usWinDescent=200)
         builder.setupPost()
