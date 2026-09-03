@@ -2,6 +2,29 @@
 local sounds = require("./sound_library.luau")
 local AudioEngine = require("./audio_engine.luau")
 local engine = AudioEngine.new(sounds)
+local pluginRoot = noctalia.pluginDir() or "."
+local customIconFont, customIconError = noctalia.loadFont("icons/fluent-person-sound-spatial.otf")
+if not customIconFont and customIconError then
+    noctalia.notifyError("Ambient Sounds", "Icon font failed: " .. customIconError)
+end
+local soundIconFonts = {}
+
+local function soundIcon(sound)
+    if sound.custom_icon then
+        local font = soundIconFonts[sound.icon]
+        if font == false then
+            return ui.glyph({ name = sound.fallback_icon or "music", size = 22, color = "primary" })
+        end
+        if font == nil then
+            font = noctalia.loadFont(pluginRoot .. "/" .. sound.icon)
+            soundIconFonts[sound.icon] = font or false
+        end
+        if font then
+            return ui.label({ text = "\u{E000}", fontFamily = font, fontSize = 22, color = "primary" })
+        end
+    end
+    return ui.glyph({ name = sound.icon, size = 22, color = "primary" })
+end
 
 local function soundCard(sound)
     return ui.column({ gap = 12, padding = 16, flexGrow = 1, minWidth = 240,
@@ -9,7 +32,7 @@ local function soundCard(sound)
         border = sound.enabled and "primary/0.45" or "outline/0.35", borderWidth = 1 }, {
         ui.row({ gap = 12, align = "center" }, {
             ui.row({ width = 46, height = 46, radius = 12, border = "outline/0.25", borderWidth = 1, align = "center", justify = "center" }, {
-                ui.glyph({ name = sound.icon, size = 22, color = "primary" }),
+                soundIcon(sound),
             }),
             ui.column({ gap = 3, flexGrow = 1 }, {
                 ui.label({ text = sound.title, fontSize = 15, fontWeight = "bold" }),
@@ -65,7 +88,9 @@ function render()
         ui.row({ gap = 18, padding = 20, align = "center", fill = "surface_variant/0.30", radius = 18,
             border = engine.running and "primary/0.65" or "primary/0.35", borderWidth = 1 }, {
             ui.row({ width = 58, height = 58, fill = "surface/0.75", radius = 16, border = "primary/0.7", borderWidth = 1, align = "center", justify = "center" }, {
-                ui.glyph({ name = "music", size = 30, color = "primary" }),
+                customIconFont
+                    and ui.label({ text = "\u{E000}", fontFamily = customIconFont, fontSize = 30, color = "primary" })
+                    or ui.glyph({ name = "music", size = 30, color = "primary" }),
             }),
             ui.column({ gap = 4, flexGrow = 1 }, {
                 ui.label({ text = "Ambient Sounds", fontSize = 25, fontWeight = "bold" }),
