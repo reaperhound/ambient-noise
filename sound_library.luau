@@ -104,4 +104,17 @@ return {
         level = 55,
         pan = 20,
     },
+    {
+        id = "cafe",
+        icon = "icons/cafe.otf",
+        custom_icon = true,
+        fallback_icon = "cloud-bolt",
+        title = "Cafe",
+        description = "Busy cafe noise",
+        file = "/home/reaper/.local/share/noctalia/plugins/ambient-sounds/sounds/cafe.mp3",
+        enabled = true,
+        amplified = false,
+        level = 55,
+        pan = 20,
+    },
 }
