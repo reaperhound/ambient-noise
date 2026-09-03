@@ -65,4 +65,17 @@ return {
         level = 55,
         pan = 20,
     },
+    {
+        id = "train",
+        icon = "icons/train.otf",
+        custom_icon = true,
+        fallback_icon = "cloud-bolt",
+        title = "Train",
+        description = "Train sound",
+        file = "/home/reaper/.local/share/noctalia/plugins/ambient-sounds/sounds/train.ogg",
+        enabled = true,
+        amplified = false,
+        level = 55,
+        pan = 20,
+    },
 }
