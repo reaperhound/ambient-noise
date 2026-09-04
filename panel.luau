@@ -1,3 +1,4 @@
+--!nonstrict
 -- Panel entry point: composes the sound library, audio engine, and UI.
 local sounds = require("./sound_library.luau")
 local AudioEngine = require("./audio_engine.luau")
@@ -84,7 +85,7 @@ function render()
         table.insert(grid, ui.row({ gap = 12, align = "stretch" }, row))
     end
 
-    panel.render(ui.column({ gap = 18, padding = 22, height = 676 }, {
+    panel.render(ui.column({ gap = 18, padding = 22, height = 676, fill = "surface/0.45" }, {
         ui.row({ gap = 18, padding = 20, align = "center", fill = "surface_variant/0.30", radius = 18,
             border = engine.running and "primary/0.65" or "primary/0.35", borderWidth = 1 }, {
             ui.row({ width = 58, height = 58, fill = "surface/0.75", radius = 16, border = "primary/0.7", borderWidth = 1, align = "center", justify = "center" }, {

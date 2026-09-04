@@ -1,3 +1,4 @@
+--!nonstrict
 -- Compact bar entry for opening the full ambient-sound mixer.
 local customIconFont = noctalia.loadFont("icons/fluent-person-sound-spatial.otf")
 if customIconFont then
@@ -12,5 +13,5 @@ barWidget.setTooltip({
 })
 
 function onClick()
-    noctalia.togglePanel("reaper/ambient-sounds:main")
+    noctalia.togglePanel("reaperhound/ambient-sounds:main")
 end

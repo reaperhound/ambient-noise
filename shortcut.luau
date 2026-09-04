@@ -1,5 +1,5 @@
 --!nonstrict
 
 function onClick()
-    noctalia.togglePanel("reaper/ambient-sounds:main")
+    noctalia.togglePanel("reaperhound/ambient-sounds:main")
 end
